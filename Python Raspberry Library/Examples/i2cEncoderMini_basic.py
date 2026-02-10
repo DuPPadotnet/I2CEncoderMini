@@ -1,44 +1,44 @@
 import smbus2
-import RPi.GPIO as GPIO
+from gpiozero import Button
 from time import sleep
 import i2cEncoderMiniLib
 
 
 def EncoderChange():
-    print ('Changed: %d' % (encoder.readCounter32()))
+    print('Changed: %d' % (encoder.readCounter32()))
 
 def EncoderPush():
-    print ('Encoder Pushed!')
-	
+    print('Encoder Pushed!')
+
 def EncoderRelease():
-    print ('Encoder Released!')
+    print('Encoder Released!')
 
 def EncoderDoublePush():
-    print ('Encoder Double Push!')
+    print('Encoder Double Push!')
 
 def EncoderLongPush():
-    print ('Encoder Long Push!')
+    print('Encoder Long Push!')
 
 def EncoderMax():
-    print ('Encoder max!')
-
+    print('Encoder max!')
 
 def EncoderMin():
-    print ('Encoder min!')
+    print('Encoder min!')
 
-
-def Encoder_INT(self):
+def Encoder_INT():
     encoder.updateStatus()
 
 
-GPIO.setmode(GPIO.BCM)
 bus = smbus2.SMBus(1)
 INT_pin = 4
-GPIO.setup(INT_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+interrupt = Button(INT_pin, pull_up=True)
 
-encoder = i2cEncoderMiniLib.i2cEncoderMiniLib(bus, 0x20)
+encoder = i2cEncoderMiniLib.i2cEncoderMiniLib(bus, 0x20) #Encoder address 0x20
 
-encconfig = ( i2cEncoderMiniLib.WRAP_ENABLE | i2cEncoderMiniLib.DIRE_RIGHT | i2cEncoderMiniLib.IPUP_ENABLE | i2cEncoderMiniLib.RMOD_X1)
+encconfig = ( i2cEncoderMiniLib.WRAP_ENABLE |
+              i2cEncoderMiniLib.DIRE_RIGHT |
+              i2cEncoderMiniLib.IPUP_ENABLE |
+              i2cEncoderMiniLib.RMOD_X1 )
 encoder.begin(encconfig)
 
 encoder.writeCounter(0)
@@ -56,13 +56,11 @@ encoder.onMax = EncoderMax
 encoder.onMin = EncoderMin
 
 encoder.autoconfigInterrupt()
-print ('Board ID code: 0x%X' % (encoder.readIDCode()))
-print ('Board Version: 0x%X' % (encoder.readVersion()))
+print('Board ID code: 0x%X' % (encoder.readIDCode()))
+print('Board Version: 0x%X' % (encoder.readVersion()))
 
+interrupt.when_pressed = Encoder_INT   
 
-GPIO.add_event_detect(INT_pin, GPIO.FALLING, callback=Encoder_INT, bouncetime=10)
 
 while True:
-  #  if GPIO.input(INT_pin) == False: #
-   #     Encoder_INT() #
-    pass
+    sleep(0.01)
