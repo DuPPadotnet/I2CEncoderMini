@@ -9,7 +9,7 @@ When the counter value is outside of the limit set by the thresholds registers, 
 I2C Encoder Mini also has an open-drain interrupt pin. It is set to logic low every time an interrupt occurs, the source of interrupt can be customized.
 
 ## Where you can get this board?
-This project is avaiable on our [Tindie store!]https://www.tindie.com/products/saimon/i2c-encoder-mini/)
+This project is avaiable on our [Duppa store!]https://www.duppa.net/product/i2c-encoder-mini/)
 
 
 
